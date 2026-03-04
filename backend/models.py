@@ -1,50 +1,77 @@
-from sqlalchemy import Column, Integer, String, Text, Float, DateTime, Boolean
-from sqlalchemy.sql import func
-from backend.database import Base
+from pydantic import BaseModel, Field
+from typing import Optional, List
+from datetime import datetime
+from enum import Enum
 
 
-class Event(Base):
-    __tablename__ = "events"
-
-    id = Column(Integer, primary_key=True, index=True)
-    title = Column(String(500), nullable=False)
-    description = Column(Text, nullable=True)
-    source = Column(String(100), nullable=True)
-    url = Column(String(1000), nullable=True)
-    published_at = Column(DateTime, nullable=True)
-    region = Column(String(50), nullable=True)
-    theme = Column(String(50), nullable=True)
-    country = Column(String(100), nullable=True)
-    risk_score = Column(Float, default=0.0)
-    sentiment = Column(Float, default=0.0)
-    is_breaking = Column(Boolean, default=False)
-    raw_source = Column(String(20), nullable=True)
-    created_at = Column(DateTime, server_default=func.now())
+class EventSeverity(str, Enum):
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
+    CRITICAL = "critical"
 
 
-class DailyBrief(Base):
-    __tablename__ = "daily_briefs"
-
-    id = Column(Integer, primary_key=True, index=True)
-    brief_date = Column(String(10), unique=True, nullable=False)
-    executive_summary = Column(Text, nullable=True)
-    key_developments = Column(Text, nullable=True)
-    threat_assessment = Column(Text, nullable=True)
-    outlook = Column(Text, nullable=True)
-    total_events = Column(Integer, default=0)
-    high_risk_events = Column(Integer, default=0)
-    created_at = Column(DateTime, server_default=func.now())
+class EventCategory(str, Enum):
+    CONFLICT = "conflict"
+    DIPLOMACY = "diplomacy"
+    ECONOMY = "economy"
+    POLITICS = "politics"
+    HUMANITARIAN = "humanitarian"
+    ENVIRONMENT = "environment"
+    SECURITY = "security"
+    OTHER = "other"
 
 
-class RegionalSummary(Base):
-    __tablename__ = "regional_summaries"
+class RawEvent(BaseModel):
+    title: str
+    url: str
+    source: str
+    published_at: str
+    description: Optional[str] = ""
+    raw_source: str
 
-    id = Column(Integer, primary_key=True, index=True)
-    brief_date = Column(String(10), nullable=False)
-    region = Column(String(50), nullable=False)
-    summary = Column(Text, nullable=True)
-    risk_level = Column(String(20), nullable=True)
-    risk_score = Column(Float, default=0.0)
-    top_themes = Column(String(200), nullable=True)
-    event_count = Column(Integer, default=0)
-    created_at = Column(DateTime, server_default=func.now())
+
+class AnalyzedEvent(BaseModel):
+    id: str
+    title: str
+    url: str
+    source: str
+    published_at: str
+    description: Optional[str] = ""
+    category: EventCategory
+    severity: EventSeverity
+    countries: List[str] = Field(default_factory=list)
+    key_actors: List[str] = Field(default_factory=list)
+    summary: str
+    significance_score: float = Field(ge=0.0, le=1.0)
+    analyzed_at: datetime = Field(default_factory=datetime.utcnow)
+    tags: List[str] = Field(default_factory=list)
+
+
+class TrendReport(BaseModel):
+    generated_at: datetime = Field(default_factory=datetime.utcnow)
+    period_hours: int = 24
+    top_categories: List[dict]
+    top_countries: List[dict]
+    top_actors: List[dict]
+    critical_events: List[AnalyzedEvent]
+    high_events: List[AnalyzedEvent]
+    total_events_analyzed: int
+    executive_summary: str
+
+
+class AgentQuery(BaseModel):
+    query: str = Field(..., min_length=3, max_length=1000)
+    max_results: int = Field(default=10, ge=1, le=50)
+    categories: Optional[List[EventCategory]] = None
+    severity_filter: Optional[EventSeverity] = None
+    countries: Optional[List[str]] = None
+
+
+class AgentResponse(BaseModel):
+    query: str
+    answer: str
+    relevant_events: List[AnalyzedEvent]
+    sources: List[str]
+    generated_at: datetime = Field(default_factory=datetime.utcnow)
+    confidence: float = Field(ge=0.0, le=1.0)
