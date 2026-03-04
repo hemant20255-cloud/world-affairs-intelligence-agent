@@ -52,8 +52,7 @@ class IntelligenceAgent:
         context_parts = []
         for i, event in enumerate(relevant_events[:10], 1):
             context_parts.append(
-                f"[Event {i}]
-"
+                f"[Event {i}]\n"
                 f"Title: {event.title}\n"
                 f"Category: {event.category.value} | Severity: {event.severity.value}\n"
                 f"Countries: {', '.join(event.countries)}\n"
