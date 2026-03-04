@@ -1,6 +1,7 @@
 # Python bytecode
 __pycache__/
 *.py[cod]
+*.pyo
 *$py.class
 *.pyc
 
@@ -22,6 +23,6 @@ dist/
 build/
 *.egg-info/
 
-# IDE
+# IDE folders
 .idea/
 .vscode/
