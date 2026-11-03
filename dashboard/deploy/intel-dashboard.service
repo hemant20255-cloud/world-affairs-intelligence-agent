@@ -1,0 +1,13 @@
+[Unit]
+Description=Intel news dashboard (Streamlit)
+After=network-online.target
+
+[Service]
+WorkingDirectory=/opt/intel/dashboard
+EnvironmentFile=/etc/intel-dashboard.env
+ExecStart=/opt/intel/venv/bin/streamlit run app.py --server.port 8501 --server.address 127.0.0.1 --server.headless true --browser.gatherUsageStats false
+Restart=always
+User=www-data
+
+[Install]
+WantedBy=multi-user.target
