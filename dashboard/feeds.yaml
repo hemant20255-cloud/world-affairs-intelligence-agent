@@ -1,0 +1,26 @@
+# Each topic = list of feeds. "gnews" entries are Google News RSS searches (India edition).
+# Add/remove sources freely; the app reloads this file on every refresh.
+topics:
+  Defence:
+    - {name: "Google News: Indian defence", gnews: "India defence OR military OR DRDO OR \"Indian Army\" OR \"Indian Navy\" OR IAF when:2d"}
+    - {name: "ET Defence", url: "https://economictimes.indiatimes.com/news/defence/rssfeeds/46687796.cms"}
+  Geopolitics & World:
+    - {name: "Google News: Geopolitics", gnews: "geopolitics OR \"foreign policy\" OR MEA OR Jaishankar when:2d"}
+    - {name: "The Diplomat", url: "https://thediplomat.com/feed/"}
+    - {name: "BBC World", url: "https://feeds.bbci.co.uk/news/world/rss.xml"}
+    - {name: "Al Jazeera", url: "https://www.aljazeera.com/xml/rss/all.xml"}
+  National:
+    - {name: "The Hindu National", url: "https://www.thehindu.com/news/national/feeder/default.rss"}
+    - {name: "Google News: Govt schemes & policy", gnews: "\"Union Cabinet\" OR \"government scheme\" OR PIB India when:2d"}
+  International:
+    - {name: "The Hindu International", url: "https://www.thehindu.com/news/international/feeder/default.rss"}
+    - {name: "Google News: India bilateral", gnews: "India bilateral OR summit OR UN OR G20 OR BRICS OR QUAD when:2d"}
+  Markets & Gold:
+    - {name: "Mint Markets", url: "https://www.livemint.com/rss/markets"}
+    - {name: "Google News: Gold & investment", gnews: "gold price India OR Sensex OR Nifty OR RBI OR \"mutual fund\" when:1d"}
+  CSR & ESG:
+    - {name: "India CSR", url: "https://indiacsr.in/feed/"}
+    - {name: "Google News: CSR India", gnews: "CSR India OR \"corporate social responsibility\" when:7d"}
+    - {name: "Google News: ESG India", gnews: "ESG India OR BRSR OR SEBI ESG when:7d"}
+  Sustainable India:
+    - {name: "Google News: Sustainability India", gnews: "India renewable energy OR \"net zero\" OR climate OR sustainability when:3d"}
